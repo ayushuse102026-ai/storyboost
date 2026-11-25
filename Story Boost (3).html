@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Story Boost</title>
+<style>
+:root{--bg:#f2f5f8;--card:#fff;--ink:#14202b;--mute:#5a6b7b;--line:#dbe3ea;--acc:#2457f5;--accink:#fff;--ok:#12805c;--bad:#c2331f;--hl:#ffd84d;--hlink:#14202b;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e151c;--card:#17212b;--ink:#e8eef4;--mute:#92a3b3;--line:#273441;--acc:#6f93ff;--accink:#0e151c;--ok:#4cd3a0;--bad:#ff8a78;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0e151c;--card:#17212b;--ink:#e8eef4;--mute:#92a3b3;--line:#273441;--acc:#6f93ff;--accink:#0e151c;--ok:#4cd3a0;--bad:#ff8a78;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:640px;margin:0 auto;padding:16px 16px 40px}
+h1{font:700 26px/1.15 Georgia,"Times New Roman",serif;margin:8px 0 4px;letter-spacing:-.01em}
+.sub{color:var(--mute);margin:0 0 16px;font-size:15px}
+nav{display:flex;gap:4px;background:var(--line);padding:4px;border-radius:12px;margin-bottom:16px}
+nav button{flex:1;border:0;background:none;color:var(--mute);font:600 14px inherit;font-family:inherit;padding:10px 4px;border-radius:9px;cursor:pointer}
+nav button[aria-selected=true]{background:var(--card);color:var(--ink)}
+section{display:none}section.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px}
+label{display:block;font-weight:600;font-size:14px;margin:12px 0 4px}
+label:first-child{margin-top:0}
+input,textarea,select{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+textarea{min-height:150px;resize:vertical}
+button.p{background:var(--acc);color:var(--accink);border:0;border-radius:10px;font:600 15px inherit;font-family:inherit;padding:12px 16px;cursor:pointer;margin-top:12px}
+button.s{background:none;color:var(--acc);border:1px solid var(--line);border-radius:10px;font:600 14px inherit;font-family:inherit;padding:10px 14px;cursor:pointer;margin:12px 8px 0 0}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.score{display:flex;align-items:center;gap:14px}
+.num{font:700 44px/1 Georgia,serif}
+.bar{flex:1;height:10px;background:var(--line);border-radius:6px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--acc);transition:width .4s}
+.chk{list-style:none;padding:0;margin:12px 0 0}
+.chk li{display:flex;gap:10px;padding:8px 0;border-top:1px solid var(--line);font-size:14px}
+.chk b{width:20px;flex:none;text-align:center}
+.pass b{color:var(--ok)}.fail b{color:var(--bad)}
+.chk small{display:block;color:var(--mute)}
+mark{background:var(--hl);color:var(--hlink);border-radius:3px;padding:0 2px}
+.verdict{font-weight:700;margin-top:10px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cmp{width:100%;border-collapse:collapse;font-size:14px;margin-top:8px}
+.cmp td,.cmp th{padding:8px 4px;border-top:1px solid var(--line);text-align:right}
+.cmp th:first-child,.cmp td:first-child{text-align:left}
+.cmp th{color:var(--mute);font-weight:600;border-top:0}
+pre{white-space:pre-wrap;font:14px/1.5 inherit;font-family:inherit;margin:0}
+.note{color:var(--mute);font-size:13px}
+:root{--bg:#f4f6f7;--card:#fff;--ink:#0d1f2d;--mute:#586b78;--line:#dde4e8;--acc:#0a7c6e;--accink:#fff;--hl:#ffe08a;--sh:0 1px 2px rgba(13,31,45,.06),0 4px 14px rgba(13,31,45,.05)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0a141c;--card:#121f29;--ink:#e9f0f4;--mute:#8fa3b0;--line:#223341;--acc:#3ed1bd;--accink:#06231f;--sh:none}}
+:root[data-theme="dark"]{--bg:#0a141c;--card:#121f29;--ink:#e9f0f4;--mute:#8fa3b0;--line:#223341;--acc:#3ed1bd;--accink:#06231f;--sh:none}
+body{font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+.top{display:flex;align-items:center;gap:10px;padding:4px 0 18px;border-bottom:1px solid var(--line);margin-bottom:22px}
+.logo{width:34px;height:34px;border-radius:9px;background:var(--acc);color:var(--accink);display:grid;place-items:center;flex:none}
+.top b{font-size:16px;letter-spacing:-.01em;display:block;line-height:1.2}
+.top span{font-size:12.5px;color:var(--mute)}
+h1{font:700 28px/1.2 "Inter",system-ui,sans-serif;letter-spacing:-.02em;margin:0 0 8px}
+.sub{font-size:15px;line-height:1.55;margin-bottom:20px}
+nav{background:none;border-bottom:1px solid var(--line);border-radius:0;padding:0;gap:0;margin-bottom:18px}
+nav button{border-radius:0;border-bottom:2px solid transparent;margin-bottom:-1px;padding:12px 4px;font-size:14px}
+nav button[aria-selected=true]{background:none;color:var(--acc);border-bottom-color:var(--acc)}
+.card{border-radius:12px;box-shadow:var(--sh);padding:18px}
+label{font-size:13px;color:var(--mute);font-weight:600}
+input,textarea,select{border-radius:8px;background:var(--card);padding:11px 12px}
+input:focus,textarea:focus,select:focus{border-color:var(--acc);outline:2px solid color-mix(in srgb,var(--acc) 25%,transparent);outline-offset:0}
+button.p{border-radius:8px;width:100%;padding:13px 16px;font-size:15px}
+button.s{border-radius:8px;color:var(--ink)}
+button.p+button.s{width:100%;margin:8px 0 0}
+.num{font:700 52px/1 "Inter",system-ui,sans-serif;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.bar{height:8px}
+.verdict{padding:10px 12px;border-radius:8px;background:var(--bg);border:1px solid var(--line)}
+.cmp td:last-child,.cmp th:last-child{font-weight:700;color:var(--acc)}
+.cmp{font-variant-numeric:tabular-nums}
+.foot{margin-top:28px;padding-top:16px;border-top:1px solid var(--line);font-size:12.5px;color:var(--mute)}
+#pr{display:none;position:fixed;inset:0;z-index:50;background:#000;color:#fff;flex-direction:column}
+#pbox{flex:1;overflow:hidden;padding:0 20px}
+#ptx{padding:40vh 0 100vh;font-weight:700;line-height:1.35;white-space:pre-wrap;text-align:center}
+.pbar{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));background:#111;border-top:1px solid #333}
+.pbar button{background:#fff;color:#000;border:0;border-radius:8px;padding:10px 16px;font:600 15px inherit;font-family:inherit;cursor:pointer}
+.pbar label{margin:0;color:#ccc;font-size:13px;display:flex;align-items:center;gap:6px}
+.pbar input{width:90px;padding:0;border:0;background:none}
+</style></head><body><main>
+<header class="top"><div class="logo"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L3 21l1.9-5.4A8 8 0 1 1 21 12z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg></div><div><b>Story Boost</b><span>Creator ad toolkit</span></div></header>
+<h1>Ads that read like recommendations.</h1>
+<p class="sub">Pay creators for a real “how I use it” story, check it reads like a recommendation, then boost it as your ad.</p>
+<nav role="tablist"><button role="tab" aria-selected="true" data-t="brief">Brief</button><button role="tab" aria-selected="false" data-t="score">Story check</button><button role="tab" aria-selected="false" data-t="money">Budget</button><button role="tab" aria-selected="false" data-t="crew">Creators</button></nav>
+
+<section id="brief" class="on">
+<div class="card"><b>How to use this app (4 easy steps)</b><ol style="margin:8px 0 0;padding-left:20px;font-size:15px"><li>Fill the form below and tap <b>Build creator brief</b>. Send it to a creator.</li><li>When they send a draft, paste it in <b>Story check</b>.</li><li>Fix anything marked ✗, then check again.</li><li>Use <b>Budget</b> to see how much money you need, and <b>Creators</b> to keep track of who you asked.</li></ol><p class="note" style="margin-bottom:0">Words: a <b>creator</b> is a person who posts videos or photos online. A <b>boost</b> means paying so more people see their post.</p></div>
+<div class="card">
+<label for="prod">Product</label><input id="prod" placeholder="e.g. Foldable standing desk">
+<label for="niche">Niche</label><input id="niche" placeholder="e.g. remote workers, home office">
+<label for="perk">One honest strength</label><input id="perk" placeholder="e.g. folds flat behind a door">
+<label for="gripe">One small drawback (yes, really)</label><input id="gripe" placeholder="e.g. takes 5 minutes to set up">
+<button class="p" id="mk">Build creator brief</button>
+</div>
+<div class="card" id="bout" hidden><pre id="btxt"></pre><button class="s" id="cp">Copy brief</button><button class="s" id="sh1">Share</button></div>
+<div class="card"><b>Video script maker</b><p class="note" style="margin:4px 0 0">Uses the product, strength and drawback from the form above. Give the result to your creator as a guide, not a script to read word for word.</p>
+<label for="vl">Video length</label><select id="vl"><option value="30">30 seconds</option><option value="45" selected>45 seconds</option><option value="60">60 seconds</option></select>
+<button class="p" id="vm">Make script outline</button></div>
+<div class="card" id="vout" hidden><pre id="vtxt"></pre><button class="s" id="vc">Copy outline</button><button class="s" id="sh2">Share</button></div>
+<div class="card"><b>Teleprompter</b><p class="note" style="margin:4px 0 0">Type or paste what you want to say. It scrolls on screen while you film. Use bullet points or short lines, so you still sound natural.</p>
+<label for="ptxt">Your lines</label><textarea id="ptxt" placeholder="Last Tuesday I finally set up my desk..."></textarea>
+<button class="p" id="pst">Open teleprompter</button></div>
+</section>
+
+<section id="score">
+<div class="card">
+<label for="story">Paste the creator’s draft</label>
+<textarea id="story" placeholder="Paste the caption or script here…"></textarea>
+<button class="p" id="go">Check story</button><button class="s" id="demo">Try a sample</button>
+</div>
+<div class="card" id="res" hidden>
+<div class="score"><div class="num" id="n">0</div><div class="bar"><i id="bf" style="width:0"></i></div></div>
+<div class="verdict" id="vd"></div>
+<ul class="chk" id="ck"></ul>
+<button class="s" id="sh3">Share feedback with creator</button>
+</div>
+<div class="card" id="hlc" hidden><div class="note" style="margin-bottom:6px">Ad-speak is highlighted. Ask the creator to reword it in their own voice.</div><div id="hl"></div></div>
+</section>
+
+<section id="money">
+<div class="card">
+<label for="cur">Currency</label><select id="cur"><option value="USD">US Dollar ($)</option><option value="INR">Indian Rupee (₹)</option><option value="EUR">Euro (€)</option><option value="GBP">British Pound (£)</option><option value="AED">UAE Dirham (AED)</option><option value="SGD">Singapore Dollar (S$)</option><option value="AUD">Australian Dollar (A$)</option><option value="CAD">Canadian Dollar (C$)</option></select>
+<div class="row"><div><label for="fee">Creator fee (<span class="cu">$</span>)</label><input id="fee" type="number" value="50" min="0"></div>
+<div><label for="boost">Boost spend (<span class="cu">$</span>)</label><input id="boost" type="number" value="100" min="0"></div></div>
+<div class="row"><div><label for="cpm">Boost CPM (<span class="cu">$</span>)</label><input id="cpm" type="number" value="9" min="1" step="0.5"></div>
+<div><label for="ctr">Your normal ad CTR (%)</label><input id="ctr" type="number" value="0.9" min="0.1" step="0.1"></div></div>
+<label for="lift">Expected CTR lift for creator posts (×)</label>
+<select id="lift"><option value="1.2">1.2× cautious</option><option value="1.5" selected>1.5× typical</option><option value="2">2× strong creator fit</option></select>
+<p class="note">Lift is an assumption, not a promise. Replace it with your own numbers after the first test.</p>
+</div>
+<div class="card"><table class="cmp"><tr><th></th><th>Brand ad</th><th>Creator story</th></tr><tbody id="mt"></tbody></table></div>
+</section>
+<section id="crew"><div class="card"><label for="cn">Creator name or handle</label><input id="cn" placeholder="e.g. @studywithasha"><button class="p" id="ca">Add creator</button></div><div class="card"><b>Send-to-creator checklist</b><p class="note" style="margin:4px 0 8px">Tick each item once you have sent it. Ticks are saved.</p><div id="ckl"></div></div>
+<div class="card"><div id="cl"><p class="note" style="margin:0">No creators yet. Add the first one above.</p></div><p class="note">Saved on this device, so it will still be here next time.</p></div></section>
+<p class="foot">Always label paid posts with the platform’s paid-partnership tool and #ad. Results depend on your product, creator and audience.</p>
+<div id="pr" role="dialog" aria-label="Teleprompter"><div id="pbox"><div id="ptx"></div></div><div class="pbar"><button id="pcl">Close</button><button id="pp">Play</button><label>Speed<input type="range" id="psp" min="2" max="30" value="8"></label><label>Size<input type="range" id="psz" min="22" max="56" value="34"></label></div></div>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{
+ document.querySelectorAll('nav button').forEach(x=>x.setAttribute('aria-selected',x===b));
+ document.querySelectorAll('section').forEach(s=>s.classList.toggle('on',s.id===b.dataset.t));});
+
+// Brief
+$('mk').onclick=()=>{
+ const p=$('prod').value||'[product]',n=$('niche').value||'[your niche]',a=$('perk').value||'[one strength]',g=$('gripe').value||'[one small drawback]';
+ $('btxt').textContent=`CREATOR BRIEF: ${p}
+
+Audience: ${n}
+Format: first-person story, 30–60 sec video or a short caption.
+
+Tell us how YOU use it. Include:
+1. The moment: when and where you last used it (a real day, not a general claim).
+2. One specific result: a number, a time saved, something you stopped doing.
+3. One honest gripe: ${g}. Mention it in your own words.
+4. What it does well for you: ${a}.
+
+Please avoid: “game-changer”, “must-have”, “limited time”, “link in bio to buy”, and any scripted pitch.
+Disclosure: label the post as a paid partnership (platform tool) and add #ad. This is required.
+Boost rights: we may run your post as an ad through your partnership permissions for 30 days.
+No edits from us beyond facts that are wrong.`;
+ $('bout').hidden=false;};
+$('cp').onclick=async()=>{try{await navigator.clipboard.writeText($('btxt').textContent);$('cp').textContent='Copied'}catch(e){$('cp').textContent='Select the text and copy'}};
+
+// Video script
+$('vm').onclick=()=>{
+ const p=$('prod').value||'[product]',a=$('perk').value||'[one strength]',g=$('gripe').value||'[one small drawback]',n=$('niche').value||'people like me';
+ const L=+$('vl').value,t2=Math.round(L*.45),t3=Math.round(L*.75),t4=L-4;
+ $('vtxt').textContent=`VIDEO OUTLINE: ${p} (${L} sec)
+
+HOOK IDEAS (pick one, say it your own way)
+• "I used to struggle with this, until last week."
+• "Here's how I actually use my ${p} every day."
+• "Honest review after a few weeks, including the annoying part."
+
+0–5s  HOOK
+Look at the camera. Say your hook. Keep it casual.
+
+5–${t2}s  THE MOMENT
+Show yourself using ${p} in a real place (desk, kitchen, bag). Say when you last used it.
+
+${t2}–${t3}s  THE RESULT
+Say one real number or change. Strength to mention if true for you: ${a}.
+
+${t3}–${t4}s  THE HONEST PART
+Mention one small drawback: ${g}. Say it in your own words.
+
+${t4}–${L}s  CLOSE
+One friendly line for ${n}. No hard sell. Show the paid-partnership label and add #ad in the caption.
+
+FILMING TIPS
+• Film vertical, near a window for light.
+• Talk like you would to a friend. Don't read from a page.
+• Add captions so it works with the sound off.`;
+ $('vout').hidden=false;$('vout').scrollIntoView({behavior:'smooth'});};
+$('vc').onclick=async()=>{try{await navigator.clipboard.writeText($('vtxt').textContent);$('vc').textContent='Copied'}catch(e){$('vc').textContent='Select the text and copy'}};
+
+// Teleprompter
+let pos=0,run=false;const pbx=$('pbox');
+function pstep(){if(run){pos+=+$('psp').value/10;pbx.scrollTop=pos;if(pbx.scrollTop+pbx.clientHeight>=pbx.scrollHeight-2){run=false;$('pp').textContent='Play'}}requestAnimationFrame(pstep)}
+requestAnimationFrame(pstep);
+$('pst').onclick=()=>{const t=$('ptxt').value.trim();if(!t){$('ptxt').focus();return}
+ $('ptx').textContent=t;$('ptx').style.fontSize=$('psz').value+'px';pos=0;pbx.scrollTop=0;run=false;$('pp').textContent='Play';$('pr').style.display='flex'};
+$('pp').onclick=()=>{run=!run;$('pp').textContent=run?'Pause':'Play'};
+$('pcl').onclick=()=>{run=false;$('pr').style.display='none'};
+$('psz').oninput=()=>{$('ptx').style.fontSize=$('psz').value+'px'};
+pbx.onclick=()=>{run=!run;$('pp').textContent=run?'Pause':'Play'};
+
+// Currency
+const DEF={USD:[50,100,9],INR:[500,1000,150],EUR:[45,90,8],GBP:[40,80,7],AED:[180,370,33],SGD:[65,135,12],AUD:[75,150,14],CAD:[65,130,12]};
+const CUR=()=>$('cur').value;let prevC='USD';
+function lab(){const s=(0).toLocaleString('en',{style:'currency',currency:CUR(),minimumFractionDigits:0,maximumFractionDigits:0}).replace(/[\d.,\s]/g,'');document.querySelectorAll('.cu').forEach(e=>e.textContent=s)}
+function setDef(c){const d=DEF[c];$('fee').value=d[0];$('boost').value=d[1];$('cpm').value=d[2];svIn()}
+function initCur(){let c=null;try{c=localStorage.getItem('sb_cur')}catch(e){}
+ const fresh=!c;
+ if(!c){const tz=Intl.DateTimeFormat().resolvedOptions().timeZone||'',lg=navigator.language||'';
+  c=/Kolkata|Calcutta/.test(tz)||/-IN$/.test(lg)?'INR':/London/.test(tz)||/-GB$/.test(lg)?'GBP':/Europe\//.test(tz)?'EUR':/Dubai/.test(tz)||/-AE$/.test(lg)?'AED':/Singapore/.test(tz)||/-SG$/.test(lg)?'SGD':/Australia/.test(tz)||/-AU$/.test(lg)?'AUD':/-CA$/.test(lg)?'CAD':'USD'}
+ $('cur').value=c;prevC=c;
+ if(fresh&&[+$('fee').value,+$('boost').value,+$('cpm').value].join()===DEF.USD.join())setDef(c);
+ lab();calc()}
+$('cur').onchange=()=>{const c=CUR();try{localStorage.setItem('sb_cur',c)}catch(e){}
+ if([+$('fee').value,+$('boost').value,+$('cpm').value].join()===DEF[prevC].join())setDef(c);
+ prevC=c;lab();calc()};
+
+// Share
+async function shareTxt(t,b){const o=b.textContent;
+ try{if(!navigator.share)throw 0;await navigator.share({text:t})}
+ catch(e){if(e&&e.name==='AbortError')return;try{await navigator.clipboard.writeText(t);b.textContent='Copied. Paste it in your chat'}catch(x){b.textContent='Sharing not available here'}setTimeout(()=>b.textContent=o,2500)}}
+$('sh1').onclick=()=>shareTxt($('btxt').textContent,$('sh1'));
+$('sh2').onclick=()=>shareTxt($('vtxt').textContent,$('sh2'));
+$('sh3').onclick=()=>{const f=[...document.querySelectorAll('#ck li.fail span')].map(s=>'• '+s.innerText.replace(/\n/g,': ')).join('\n');
+ const t=`Hi! Thanks for the draft. Story score: ${$('n').textContent}/100.\n\n`+(f?`Please change:\n${f}\n\nSend it again when it's ready, before you post.`:'It looks great. Please post it with the paid-partnership label and #ad.');
+ shareTxt(t,$('sh3'))};
+
+// Story check
+const AD=["game-changer","game changer","revolutionary","must-have","must have","limited time","act now","buy now","click the link","link in bio","amazing","life-changing","life changing","unbeatable","exclusive offer","don't miss","groundbreaking","cutting-edge","best ever","risk-free","hurry","sign up today","discount code","use code"];
+const esc=s=>s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+function check(t){
+ const l=t.toLowerCase(),w=(l.match(/\b[\w']+\b/g)||[]).length;
+ const fp=(l.match(/\b(i|i'm|i've|i'd|my|me|mine)\b/g)||[]).length;
+ const sp=/\d|\b(yesterday|today|last (week|night|month)|this (morning|week)|every (day|morning|night)|monday|tuesday|wednesday|thursday|friday|saturday|sunday|minutes?|hours?)\b/.test(l);
+ const rs=/\b(saved|stopped|finally|went from|noticed|now i|no longer|cut|faster|less|more than|instead of|used to)\b/.test(l);
+ const fr=/\b(but|only thing|wish|annoying|not perfect|downside|took me|a bit|slightly|though)\b/.test(l);
+ const found=AD.filter(a=>l.includes(a));
+ const disc=/#ad\b|#sponsored|paid partnership|partnered with|#gifted|sponsored by/.test(l);
+ const len=w>=40&&w<=220;
+ const items=[
+  [fp>=3,20,'Told in first person','Use “I” and “my”: what you did, not what it is.'],
+  [sp,20,'Names a real moment or number','Add a day, time or amount so it feels lived.'],
+  [rs,20,'Shows a result','Say what changed for you.'],
+  [fr,15,'Includes one honest gripe','A small drawback is what makes the rest believable.'],
+  [len,10,'Length fits a story ('+w+' words)','Aim for 40–220 words.'],
+  [found.length===0,15,found.length?'Ad-speak found: '+found.join(', '):'No ad-speak','Swap pitch phrases for plain words.']];
+ let s=0;items.forEach(i=>{if(i[0])s+=i[1]});
+ if(found.length)s=Math.max(0,s-5*found.length);
+ return{s,items,disc,found,w};}
+$('go').onclick=()=>{
+ const t=$('story').value.trim();if(!t){$('story').focus();return}
+ const r=check(t);
+ $('n').textContent=r.s;$('bf').style.width=r.s+'%';
+ const ready=r.s>=70&&r.disc;
+ $('vd').style.color=ready?'var(--ok)':'var(--bad)';
+ $('vd').textContent=ready?'Ready to boost.':(!r.disc?'Not ready: add a paid-partnership label and #ad before boosting.':'Needs a rewrite before boosting.');
+ $('ck').innerHTML=r.items.map(i=>`<li class="${i[0]?'pass':'fail'}"><b>${i[0]?'✓':'✗'}</b><span>${i[2]}${i[0]?'':'<small>'+i[3]+'</small>'}</span></li>`).join('')+
+  `<li class="${r.disc?'pass':'fail'}"><b>${r.disc?'✓':'✗'}</b><span>Disclosure present<small>${r.disc?'Required to boost legally.':'Required. Add the paid-partnership label and #ad.'}</small></span></li>`;
+ let h=esc(t);r.found.forEach(a=>{h=h.replace(new RegExp(a.replace(/[-]/g,'\\-'),'gi'),m=>'<mark>'+m+'</mark>')});
+ $('hl').innerHTML=h.replace(/\n/g,'<br>');
+ $('res').hidden=false;$('hlc').hidden=false;$('res').scrollIntoView({behavior:'smooth'});};
+$('demo').onclick=()=>{$('story').value="Last Tuesday I finally set up my desk behind the couch instead of in the spare room. I used to lose 20 minutes every morning clearing space, and now I just unfold it and start. I've used it for three weeks and my back feels better by lunch. The only thing I'd change is the setup, it took me about 5 minutes the first time. Paid partnership with Fold Desk #ad"};
+
+// Budget
+function calc(){
+ const f=+$('fee').value||0,b=+$('boost').value||0,cpm=Math.max(+$('cpm').value||1,1),ctr=(+$('ctr').value||0.1)/100,L=+$('lift').value;
+ const imp=b/cpm*1000,c1=imp*ctr,c2=imp*ctr*L;
+ const fm=n=>n.toLocaleString(undefined,{maximumFractionDigits:0}),$$=n=>new Intl.NumberFormat(undefined,{style:'currency',currency:CUR(),maximumFractionDigits:2}).format(n);
+ $('mt').innerHTML=`<tr><td>Spend</td><td>${$$(b)}</td><td>${$$(f+b)}</td></tr>
+ <tr><td>Impressions</td><td>${fm(imp)}</td><td>${fm(imp)}</td></tr>
+ <tr><td>Clicks</td><td>${fm(c1)}</td><td>${fm(c2)}</td></tr>
+ <tr><td>Cost per click</td><td>${c1?$$(b/c1):'–'}</td><td>${c2?$$((f+b)/c2):'–'}</td></tr>`;}
+['fee','boost','cpm','ctr','lift'].forEach(i=>$(i).addEventListener('input',calc));calc();
+let crew=[];try{crew=JSON.parse(localStorage.getItem('sb_crew')||'[]')}catch(e){}
+const ST=['Asked','Said yes','Draft received','Posted','Boosted'];const sv=()=>{try{localStorage.setItem('sb_crew',JSON.stringify(crew))}catch(e){}};
+function rc(){$('cl').innerHTML=crew.length?crew.map((c,i)=>`<div style="display:flex;gap:8px;align-items:center;padding:8px 0;border-top:1px solid var(--line)"><span style="flex:1;word-break:break-word">${esc(c.n)}</span><select data-i="${i}" style="width:auto">${ST.map(s=>`<option${s===c.s?' selected':''}>${s}</option>`).join('')}</select><button class="s" data-d="${i}" style="margin:0" aria-label="Remove">✕</button></div>`).join(''):'<p class="note" style="margin:0">No creators yet. Add the first one above.</p>';}
+$('ca').onclick=()=>{const v=$('cn').value.trim();if(!v)return;crew.push({n:v,s:ST[0]});$('cn').value='';rc();sv();};
+$('cl').addEventListener('change',e=>{if(e.target.dataset.i){crew[e.target.dataset.i].s=e.target.value;sv()}});
+$('cl').addEventListener('click',e=>{if(e.target.dataset.d){crew.splice(e.target.dataset.d,1);rc();sv()}});
+const KEEP=['ptxt','prod','niche','perk','gripe','story','fee','boost','cpm','ctr','lift'];
+try{const d=JSON.parse(localStorage.getItem('sb_in')||'{}');KEEP.forEach(k=>{if(d[k]!=null)$(k).value=d[k]})}catch(e){}
+const svIn=()=>{try{localStorage.setItem('sb_in',JSON.stringify(Object.fromEntries(KEEP.map(i=>[i,$(i).value]))))}catch(e){}};
+KEEP.forEach(k=>{$(k).addEventListener('input',svIn);$(k).addEventListener('change',svIn)});
+initCur();rc();calc();
+const CK=['The product (sample) and where to send it','The creator brief (from the Brief tab)','The video outline (from the Brief tab)','Fee amount and payment date, agreed in writing','Deadline for the first draft','Permission to boost their post as an ad for 30 days','Reminder: paid-partnership label and #ad','Rule: only true claims about the product','Ask them to send the draft before posting'];
+let cs=[];try{cs=JSON.parse(localStorage.getItem('sb_ck')||'[]')}catch(e){}
+$('ckl').innerHTML=CK.map((t,i)=>`<label style="display:flex;gap:10px;align-items:flex-start;margin:0;padding:10px 0;border-top:1px solid var(--line);font-size:15px;font-weight:400;color:var(--ink)"><input type="checkbox" data-k="${i}" style="width:20px;height:20px;margin:2px 0 0;flex:none"${cs[i]?' checked':''}><span>${t}</span></label>`).join('');
+$('ckl').addEventListener('change',e=>{if(e.target.dataset.k!=null){cs[e.target.dataset.k]=e.target.checked;try{localStorage.setItem('sb_ck',JSON.stringify(cs))}catch(x){}}});
+</script></body></html>
